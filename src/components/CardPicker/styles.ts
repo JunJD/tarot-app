@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         bottom: CARD_HEIGHT + 50,
         fontSize: 20,
-        color: '#FFD700',
+        color: '#fff',
         fontWeight: 'bold',
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: { width: 2, height: 2 },

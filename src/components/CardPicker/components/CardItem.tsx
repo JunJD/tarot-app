@@ -112,8 +112,7 @@ export const CardItem = React.memo(({
       isDrawn: true,
       translateX,
       translateY,
-      image: CARD_IMAGES[card.key],
-      picked: true
+      image: APP_IMAGES.cardBack,
     });
   };
 
@@ -128,8 +127,6 @@ export const CardItem = React.memo(({
       translateY,
       isDragged: true,
       isDrawn: true,
-      picked: true,
-      image: CARD_IMAGES[card.key]
     });
   };
 
@@ -189,7 +186,7 @@ export const CardItem = React.memo(({
       left: '50%',
       marginLeft: -styles.card.width / 2,
       borderWidth: 2,
-      borderColor: isCentered ? '#FFD700' : '#F0F0F0',
+      borderColor: isCentered ? '#fff' : 'rgba(255, 255, 255, 0.55)',
       borderRadius: 8,
       shadowColor: '#000',
       shadowOffset: {
@@ -217,6 +214,7 @@ export const CardItem = React.memo(({
           height: '100%',
           backgroundColor: 'white',
           borderRadius: 8,
+          position: 'relative',
         }}
       >
         <Image
@@ -227,6 +225,19 @@ export const CardItem = React.memo(({
           }]}
           resizeMode="cover"
         />
+        {!card.picked && (
+          <Animated.View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: 8,
+            }}
+          />
+        )}
       </TouchableOpacity>
     </Animated.View>
   );

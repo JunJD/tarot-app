@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import Animated, {
   useSharedValue,
   withSpring,
@@ -64,8 +64,21 @@ export const CardPicker = () => {
       translateY: undefined,
     }));
     setCards(newCards);
-    rotationOffset.value = withSpring(0);
-    setSelectedIndex(-1);
+
+    // 计算与初始化时相同的偏移量
+    const initialOffset = (NORMAL_CARD_SPACING * (cards.length - 1) / 2);
+    const extraLeftOffset = -12;
+    
+    // 使用相同的动画效果
+    rotationOffset.value = withSpring(initialOffset + extraLeftOffset, {
+      damping: 20,
+      stiffness: 90,
+      mass: 0.5,
+    });
+
+    // 计算正确的中心卡片索引
+    const newCenterIndex = Math.floor(cards.length / 2) - Math.round((initialOffset + extraLeftOffset) / NORMAL_CARD_SPACING);
+    setCenterIndex(Math.min(Math.max(0, newCenterIndex), cards.length - 1));
   };
 
   const calculateSelectedIndex = (offset: number) => {
@@ -142,6 +155,24 @@ export const CardPicker = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // 计算需要滚动到左侧第一张卡片所需的偏移量
+    const initialOffset = (NORMAL_CARD_SPACING * (cards.length - 1) / 2);
+    // 增加额外的左偏移，让第一张卡片对齐左边缘
+    const extraLeftOffset = -12; // 可以根据实际效果调整这个值
+    
+    // 使用 withSpring 实现平滑滚动效果
+    rotationOffset.value = withSpring(initialOffset + extraLeftOffset, {
+      damping: 20,
+      stiffness: 90,
+      mass: 0.5,
+    });
+    
+    // 计算实际的中心卡片索引
+    const newCenterIndex = Math.floor(cards.length / 2) - Math.round((initialOffset + extraLeftOffset) / NORMAL_CARD_SPACING);
+    setCenterIndex(Math.min(Math.max(0, newCenterIndex), cards.length - 1));
+  }, []); // 仅在组件挂载时执行一次
+
   return (
     <View style={styles.outerContainer}>
       <View style={styles.container}>
@@ -169,7 +200,6 @@ export const CardPicker = () => {
             style={styles.resetButton}
             onPress={() => {
               resetCards();
-              setCenterIndex(Math.floor(cards.length / 2));
             }}
           >
             <Image 
